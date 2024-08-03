@@ -1,0 +1,65 @@
+import unittest
+
+class Solution:
+    def trap(self, height: list[int]) -> int:
+        trap = False
+        total_volume = 0
+        cur_volume = 0
+        trap_start_height = 0
+        for i in range(len(height)):
+            if (not trap) and (height[i] > 0):
+                trap = True
+                cur_volume = 0
+                trap_start_height = height[i]
+            else:
+                if (trap) and (height[i] < trap_start_height):
+                    cur_volume = cur_volume + trap_start_height - height[i]
+                else:
+                    if (trap) and (height[i] >= trap_start_height):
+                        #trap = False
+                        total_volume = total_volume + cur_volume
+                        cur_volume = 0
+                        trap_start_height = height[i]
+            print(f'h: {height[i]}, trap: {trap}, cur_volume: {cur_volume}, total_volume: {total_volume}, trap_start_height: {trap_start_height}')
+            
+        trap = False
+        trap_start_height = 0
+        cur_volume = 0
+        for i in range(len(height)-1,-1,-1):
+            if (not trap) and (height[i] > 0):
+                trap = True
+                cur_volume = 0
+                trap_start_height = height[i]
+            else:
+                if (trap) and (height[i] <= trap_start_height):
+                    cur_volume = cur_volume + trap_start_height - height[i]
+                else:
+                    if (trap) and (height[i] > trap_start_height):
+                        #trap = False
+                        total_volume = total_volume + cur_volume
+                        cur_volume = 0
+                        trap_start_height = height[i]
+            
+        return total_volume
+        
+
+class TestSolution(unittest.TestCase):   
+    def test_1(self):
+        height = [0,1,0,2,1,0,1,3,2,1,2,1]
+        correct_answer = 6
+        solution = Solution()
+        self.assertEqual(solution.trap(height), correct_answer)
+        
+    def test_2(self):
+        height = [4,2,0,3,2,5]
+        correct_answer = 9
+        solution = Solution()
+        self.assertEqual(solution.trap(height), correct_answer)
+        
+    def test_3(self):
+        height = [2,0,2]
+        correct_answer = 2
+        solution = Solution()
+        self.assertEqual(solution.trap(height), correct_answer)
+
+unittest.main()
